@@ -33,9 +33,9 @@ jobs:
     - name: Run Checkmarx AST Scan
       uses: Checkmarx/ast-github-action@2.0.23
       with:
-        base_uri: https://ind.ast.checkmarx.net
+        base_uri: https://ind.ast.checkmarx.net/
         cx_tenant: sudha
-        client_id: cx-dhruv-client-id
-        client_secret: 56FqEFUHcSYiVpphj3jUeXpNofqhCBFG
+        cx_client_id: cx-dhruv-client-id
+        cx_client_secret: 56FqEFUHcSYiVpphj3jUeXpNofqhCBFG
         project_name: cx-dhruv-s-pathak/argocd-example-apps
         branch: master
