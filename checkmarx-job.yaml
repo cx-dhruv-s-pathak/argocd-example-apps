@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: checkmarx-sast-scan
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+        - name: checkmarx
+          image: checkmarx/ast-cli
+          command: ["sh", "-c"]
+          args:
+            - |
+              echo "Running Checkmarx scan...";
+              scan --project-name "guestbook-argocd" \
+                   --src-url "https://github.com/cx-dhruv-s-pathak/argocd-example-apps.git" \
+                   --branch "master"
+          env:
+            - name: CX_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: cx-secrets
+                  key: CX_CLIENT_ID
+            - name: CX_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: cx-secrets
+                  key: CX_CLIENT_SECRET
+             - name: CX_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: cx-secrets
+                  key: CX_CLIENT_SECRET
+            - name: CX_TENANT
+              valueFrom:
+                secretKeyRef:
+                  name: cx-secrets
+                  key: CX_TENANT
+            - name: CX_BASE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: cx-secrets
+                  key: CX_BASE_URI
+      restartPolicy: Never
+  backoffLimit: 0
