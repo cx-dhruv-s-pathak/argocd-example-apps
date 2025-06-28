@@ -1,0 +1,43 @@
+name: ArgoCD Sync + Checkmarx Scan
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  argocd-sync:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v3
+
+    - name: Sync ArgoCD app
+      env:
+        ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}
+        ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
+      run: |
+        curl -sSL -o argocd https://${ARGOCD_SERVER}/download/argocd-linux-amd64
+        chmod +x argocd
+        sudo mv argocd /usr/local/bin/
+
+        argocd login 54.164.44.49:32106 --username admin --password m4Y0nL8tAxx6jRy4 --insecure
+        argocd app sync guestbook --grpc-web
+        argocd app wait guestbook --health --sync --timeout 180 --grpc-web
+
+  checkmarx-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v3
+
+    - name: Run Checkmarx AST Scan
+      uses: Checkmarx/ast-github-action@2.0.23
+      with:
+        base_uri: https://ind.ast.checkmarx.net
+        tenant: sudha
+        client_id: cx-dhruv-client-id
+        client_secret: 56FqEFUHcSYiVpphj3jUeXpNofqhCBFG
+        project_name: cx-dhruv-s-pathak/argocd-example-apps
+        branch: master
