@@ -16,7 +16,7 @@ jobs:
     - name: Sync ArgoCD app
       
       run: |
-        curl -sSL -o argocd http://54.164.44.49:32106/download/argocd-linux-amd64
+        curl -k -sSL -o argocd https://54.164.44.49:32106/download/argocd-linux-amd64
         chmod +x argocd
         sudo mv argocd /usr/local/bin/
 
@@ -34,7 +34,7 @@ jobs:
       uses: Checkmarx/ast-github-action@2.0.23
       with:
         base_uri: https://ind.ast.checkmarx.net
-        tenant: sudha
+        cx_tenant: sudha
         client_id: cx-dhruv-client-id
         client_secret: 56FqEFUHcSYiVpphj3jUeXpNofqhCBFG
         project_name: cx-dhruv-s-pathak/argocd-example-apps
